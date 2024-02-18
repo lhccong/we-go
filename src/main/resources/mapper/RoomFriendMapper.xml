@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cong.wego.mapper.RoomFriendMapper">
+
+    <resultMap id="BaseResultMap" type="com.cong.wego.model.entity.RoomFriend">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="roomId" column="roomId" jdbcType="BIGINT"/>
+            <result property="uid1" column="uid1" jdbcType="BIGINT"/>
+            <result property="uid2" column="uid2" jdbcType="BIGINT"/>
+            <result property="roomKey" column="roomKey" jdbcType="VARCHAR"/>
+            <result property="status" column="status" jdbcType="INTEGER"/>
+            <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,roomId,uid1,
+        uid2,roomKey,status,
+        createTime,updateTime
+    </sql>
+</mapper>

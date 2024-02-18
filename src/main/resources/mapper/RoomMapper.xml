@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cong.wego.mapper.RoomMapper">
+
+    <resultMap id="BaseResultMap" type="com.cong.wego.model.entity.Room">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="type" column="type" jdbcType="INTEGER"/>
+            <result property="hotFlag" column="hotFlag" jdbcType="INTEGER"/>
+            <result property="activeTime" column="activeTime" jdbcType="TIMESTAMP"/>
+            <result property="lastMsgId" column="lastMsgId" jdbcType="BIGINT"/>
+            <result property="extJson" column="extJson" jdbcType="OTHER"/>
+            <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,type,hotFlag,
+        activeTime,lastMsgId,extJson,
+        createTime,updateTime
+    </sql>
+</mapper>

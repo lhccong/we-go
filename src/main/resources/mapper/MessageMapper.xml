@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cong.wego.mapper.MessageMapper">
+
+    <resultMap id="BaseResultMap" type="com.cong.wego.model.entity.Message">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="roomId" column="roomId" jdbcType="BIGINT"/>
+            <result property="fromUid" column="fromUid" jdbcType="BIGINT"/>
+            <result property="content" column="content" jdbcType="VARCHAR"/>
+            <result property="replyMsgId" column="replyMsgId" jdbcType="BIGINT"/>
+            <result property="status" column="status" jdbcType="INTEGER"/>
+            <result property="gapCount" column="gapCount" jdbcType="INTEGER"/>
+            <result property="type" column="type" jdbcType="INTEGER"/>
+            <result property="extra" column="extra" jdbcType="OTHER"/>
+            <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,roomId,fromUid,
+        content,replyMsgId,status,
+        gapCount,type,extra,
+        createTime,updateTime
+    </sql>
+</mapper>

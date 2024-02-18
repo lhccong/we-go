@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cong.wego.mapper.UserRoomRelateMapper">
+
+    <resultMap id="BaseResultMap" type="com.cong.wego.model.entity.UserRoomRelate">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="userId" column="userId" jdbcType="BIGINT"/>
+            <result property="roomId" column="roomId" jdbcType="BIGINT"/>
+            <result property="latestReadMsgId" column="latestReadMsgId" jdbcType="BIGINT"/>
+            <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,userId,roomId,
+        latestReadMsgId,createTime,updateTime
+    </sql>
+</mapper>
