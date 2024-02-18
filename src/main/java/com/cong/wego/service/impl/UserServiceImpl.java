@@ -5,6 +5,8 @@ import static com.cong.wego.constant.SystemConstants.SALT;
 import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.text.CharSequenceUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cong.wego.common.ErrorCode;
@@ -164,6 +166,24 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         }
         // 先判断是否已登录
         Object userObj = StpUtil.getTokenSession().get(SystemConstants.USER_LOGIN_STATE);
+        User currentUser = (User) userObj;
+        // 从数据库查询（追求性能的话可以注释，直接走缓存）
+        long userId = currentUser.getId();
+        currentUser = this.getById(userId);
+        if (currentUser == null) {
+            throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
+        }
+        return currentUser;
+    }
+
+    @Override
+    public User getLoginUser(String token) {
+        if (CharSequenceUtil.isEmpty(token)) {
+            throw new BusinessException(ErrorCode.NOT_LOGIN_ERROR);
+        }
+
+        // 先判断是否已登录
+        Object userObj = StpUtil.getTokenSessionByToken(token).get(SystemConstants.USER_LOGIN_STATE);
         User currentUser = (User) userObj;
         // 从数据库查询（追求性能的话可以注释，直接走缓存）
         long userId = currentUser.getId();

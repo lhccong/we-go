@@ -52,6 +52,14 @@ public interface UserService extends IService<User> {
     User getLoginUser();
 
     /**
+     * 获取当前登录用户根据token
+     *
+     * @param token 令 牌
+     * @return {@link User}
+     */
+    User getLoginUser(String token);
+
+    /**
      * 获取当前登录用户（允许未登录）
      *
      * @return {@link User}

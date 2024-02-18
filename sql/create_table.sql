@@ -84,7 +84,7 @@ create table room_friend
     uid1        bigint                                   not null comment 'uid1（更小的uid）',
     uid2        bigint                                   not null comment 'uid2（更大的uid）',
     roomKey    varchar(64)                              not null comment '房间key由两个uid拼接，先做排序uid1_uid2',
-    status      int                                      not null comment '房间状态 0正常 1禁用(删好友了禁用)',
+    status      int                default 0                     not null comment '房间状态 0正常 1禁用(删好友了禁用)',
     createTime datetime(3) default CURRENT_TIMESTAMP(3) not null comment '创建时间',
     updateTime datetime(3) default CURRENT_TIMESTAMP(3) not null on update CURRENT_TIMESTAMP(3) comment '修改时间',
     constraint roomKey
