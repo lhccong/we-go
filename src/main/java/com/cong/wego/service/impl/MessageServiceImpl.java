@@ -38,7 +38,7 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message>
         // 创建分页对象
         Page<Message> messagePage = this.page(new Page<>(current, size),
                 // 创建查询条件对象
-                new LambdaQueryWrapper<Message>().eq(Message::getRoomId, messageQueryRequest.getRoomId()).orderByDesc(Message::getUpdateTime));
+                new LambdaQueryWrapper<Message>().eq(Message::getRoomId, messageQueryRequest.getRoomId()));
         // 获取分页结果中的消息列表
         List<Message> messageList = messagePage.getRecords();
         // 将消息列表转换为ChatMessageResp对象列表
