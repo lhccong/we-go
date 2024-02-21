@@ -1,4 +1,4 @@
-package com.cong.wego.model.vo;
+package com.cong.wego.model.vo.user;
 
 import cn.dev33.satoken.stp.SaTokenInfo;
 import lombok.Data;

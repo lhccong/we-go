@@ -17,8 +17,9 @@ import com.cong.wego.model.dto.user.UserRegisterRequest;
 import com.cong.wego.model.dto.user.UserUpdateMyRequest;
 import com.cong.wego.model.dto.user.UserUpdateRequest;
 import com.cong.wego.model.entity.User;
-import com.cong.wego.model.vo.LoginUserVO;
-import com.cong.wego.model.vo.UserVO;
+import com.cong.wego.model.vo.user.LoginUserVO;
+import com.cong.wego.model.vo.user.TokenLoginUserVo;
+import com.cong.wego.model.vo.user.UserVO;
 import com.cong.wego.service.UserService;
 import java.util.List;
 import javax.annotation.Resource;
@@ -48,7 +49,7 @@ import static com.cong.wego.constant.SystemConstants.SALT;
 @RestController
 @RequestMapping("/user")
 @Slf4j
-@Api(tags = "用户相关")
+@Api(value = "用户相关")
 public class UserController {
 
     @Resource
@@ -89,7 +90,7 @@ public class UserController {
      */
     @PostMapping("/login")
     @ApiOperation(value = "用户登录")
-    public BaseResponse<LoginUserVO> userLogin(@RequestBody UserLoginRequest userLoginRequest) {
+    public BaseResponse<TokenLoginUserVo> userLogin(@RequestBody UserLoginRequest userLoginRequest) {
         if (userLoginRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
@@ -98,8 +99,8 @@ public class UserController {
         if (StringUtils.isAnyBlank(userAccount, userPassword)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
-        LoginUserVO loginUserVO = userService.userLogin(userAccount, userPassword);
-        return ResultUtils.success(loginUserVO);
+        TokenLoginUserVo tokenLoginUserVo = userService.userLogin(userAccount, userPassword);
+        return ResultUtils.success(tokenLoginUserVo);
     }
 
     /**

@@ -1,4 +1,4 @@
-package com.cong.wego.model.vo;
+package com.cong.wego.model.vo.user;
 
 import java.io.Serializable;
 import java.util.Date;
