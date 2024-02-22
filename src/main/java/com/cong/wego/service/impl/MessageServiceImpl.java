@@ -1,13 +1,12 @@
 package com.cong.wego.service.impl;
 
+import cn.hutool.core.collection.ListUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cong.wego.model.dto.chat.MessageQueryRequest;
 import com.cong.wego.model.entity.Message;
-import com.cong.wego.model.vo.user.UserVO;
 import com.cong.wego.model.vo.ws.response.ChatMessageResp;
-import com.cong.wego.model.vo.ws.response.WSBaseResp;
 import com.cong.wego.service.MessageService;
 import com.cong.wego.mapper.MessageMapper;
 import com.cong.wego.websocket.adapter.WSAdapter;
@@ -38,9 +37,9 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message>
         // 创建分页对象
         Page<Message> messagePage = this.page(new Page<>(current, size),
                 // 创建查询条件对象
-                new LambdaQueryWrapper<Message>().eq(Message::getRoomId, messageQueryRequest.getRoomId()));
-        // 获取分页结果中的消息列表
-        List<Message> messageList = messagePage.getRecords();
+                new LambdaQueryWrapper<Message>().eq(Message::getRoomId, messageQueryRequest.getRoomId()).orderByDesc(Message::getCreateTime));
+        // 获取分页结果中的消息列表 翻转
+        List<Message> messageList = ListUtil.reverse(messagePage.getRecords());
         // 将消息列表转换为ChatMessageResp对象列表
         List<ChatMessageResp> chatMessageRespList = messageList.stream().map(item -> wsAdapter.getMessageVo(item.getFromUid(), item.getContent()))
                 .collect(Collectors.toList());

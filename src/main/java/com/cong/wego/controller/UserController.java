@@ -108,8 +108,7 @@ public class UserController {
      */
     @GetMapping("/login/wx_open")
     @ApiOperation(value = "用户登录（微信开放平台）")
-    public BaseResponse<LoginUserVO> userLoginByWxOpen(HttpServletRequest request,
-            @RequestParam("code") String code) {
+    public BaseResponse<LoginUserVO> userLoginByWxOpen(@RequestParam("code") String code) {
         WxOAuth2AccessToken accessToken;
         try {
             WxMpService wxService = wxOpenConfig.getWxMpService();
@@ -299,13 +298,11 @@ public class UserController {
      * 更新个人信息
      *
      * @param userUpdateMyRequest 用户更新我请求
-     * @param request             请求
      * @return {@link BaseResponse}<{@link Boolean}>
      */
     @PostMapping("/update/my")
     @ApiOperation(value = "更新个人信息")
-    public BaseResponse<Boolean> updateMyUser(@RequestBody UserUpdateMyRequest userUpdateMyRequest,
-            HttpServletRequest request) {
+    public BaseResponse<Boolean> updateMyUser(@RequestBody UserUpdateMyRequest userUpdateMyRequest) {
         if (userUpdateMyRequest == null) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
