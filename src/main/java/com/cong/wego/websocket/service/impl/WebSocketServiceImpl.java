@@ -5,19 +5,24 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.text.CharSequenceUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.json.JSONUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.cong.wego.common.ErrorCode;
+import com.cong.wego.common.event.UserGroupMessageEvent;
 import com.cong.wego.common.event.UserOfflineEvent;
 import com.cong.wego.common.event.UserOnlineEvent;
 import com.cong.wego.common.event.UserPrivateMessageEvent;
 import com.cong.wego.config.ThreadPoolConfig;
+import com.cong.wego.model.dto.ws.GroupMessageDTO;
 import com.cong.wego.model.dto.ws.PrivateMessageDTO;
 import com.cong.wego.model.dto.ws.WSChannelExtraDTO;
 import com.cong.wego.model.entity.User;
+import com.cong.wego.model.entity.UserRoomRelate;
 import com.cong.wego.model.enums.chat.MessageTypeEnum;
 import com.cong.wego.model.vo.message.ChatMessageVo;
 import com.cong.wego.model.vo.ws.request.WSBaseReq;
 import com.cong.wego.model.vo.ws.response.ChatMessageResp;
 import com.cong.wego.model.vo.ws.response.WSBaseResp;
+import com.cong.wego.service.UserRoomRelateService;
 import com.cong.wego.service.UserService;
 import com.cong.wego.websocket.adapter.WSAdapter;
 import com.cong.wego.websocket.cache.UserCache;
@@ -33,9 +38,11 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+
 
 
 /**
@@ -57,6 +64,7 @@ public class WebSocketServiceImpl implements WebSocketService {
     @Qualifier(ThreadPoolConfig.WS_EXECUTOR)
     private final ThreadPoolTaskExecutor threadPoolTaskExecutor;
     private final WSAdapter wsAdapter;
+    private final UserRoomRelateService userRoomRelateService;
 
 
     /**
@@ -154,14 +162,13 @@ public class WebSocketServiceImpl implements WebSocketService {
         }
         MessageTypeEnum messageTypeEnum = MessageTypeEnum.of(chatMessageVo.getType());
         String messageContent = chatMessageVo.getContent();
+        long loginUserId = Long.parseLong(StpUtil.getLoginIdByToken(token).toString());
         switch (messageTypeEnum) {
             case PRIVATE:
-                long loginUserId = Long.parseLong(StpUtil.getLoginIdByToken(token).toString());
                 PrivateMessageDTO privateMessageDTO = PrivateMessageDTO.builder().content(messageContent).fromUserId(loginUserId).toUserId(uid).build();
-
                 // 发布用户私信事件
                 applicationEventPublisher.publishEvent(new UserPrivateMessageEvent(this, privateMessageDTO));
-                //判断用户是否登录
+                //判断接收用户对象是否登录
                 CopyOnWriteArrayList<Channel> channels = ONLINE_UID_MAP.get(uid);
                 //对方不在线，只需要保存消息就好了
                 if (channels != null) {
@@ -170,7 +177,12 @@ public class WebSocketServiceImpl implements WebSocketService {
                 }
                 break;
             case GROUP:
-                log.info("群聊");
+                //当用户发送群聊的时候uid就是发送的roomId
+                GroupMessageDTO groupMessageDTO = GroupMessageDTO.builder().content(messageContent).fromUserId(loginUserId).toRoomId(uid).build();
+                //发布用户群聊事件
+                applicationEventPublisher.publishEvent(new UserGroupMessageEvent(this, groupMessageDTO));
+                //发送用户群聊
+                sendGroupMessage(groupMessageDTO);
                 break;
             default:
                 sendMsg(channel, errorResp);
@@ -179,6 +191,21 @@ public class WebSocketServiceImpl implements WebSocketService {
 
     }
 
+    private void sendGroupMessage(GroupMessageDTO groupMessageDTO) {
+        WSBaseResp<ChatMessageResp> baseResp = wsAdapter.buildGroupMessageResp(groupMessageDTO);
+        //获取房间人员id数组
+        List<UserRoomRelate> list = userRoomRelateService.list(new LambdaQueryWrapper<UserRoomRelate>().eq(UserRoomRelate::getRoomId, groupMessageDTO.getToRoomId()));
+        if (list.isEmpty()){
+            return;
+        }
+        list.forEach(userRoomRelate -> {
+            Long uid = userRoomRelate.getUserId();
+            if (uid.equals(groupMessageDTO.getFromUserId())){
+                return;
+            }
+            sendToUid(baseResp, uid);
+        });
+    }
 
     /**
      * 用户上线

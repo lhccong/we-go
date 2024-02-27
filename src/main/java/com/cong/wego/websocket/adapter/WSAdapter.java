@@ -1,6 +1,7 @@
 package com.cong.wego.websocket.adapter;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.cong.wego.model.dto.ws.GroupMessageDTO;
 import com.cong.wego.model.dto.ws.PrivateMessageDTO;
 import com.cong.wego.model.entity.RoomFriend;
 import com.cong.wego.model.entity.User;
@@ -44,6 +45,22 @@ public class WSAdapter {
         if (roomFriend != null) {
             chatMessageResp.setRoomId(roomFriend.getRoomId());
         }
+        // 设置数据和类型
+        wsBaseResp.setData(chatMessageResp);
+        wsBaseResp.setType(WSReqTypeEnum.CHAT.getType());
+        return wsBaseResp;
+    }
+
+    public WSBaseResp<ChatMessageResp> buildGroupMessageResp(GroupMessageDTO groupMessageDTO) {
+        // 获取私信的发送者
+        Long loginUserId = groupMessageDTO.getFromUserId();
+        //发送信息
+        String content = groupMessageDTO.getContent();
+        ChatMessageResp chatMessageResp = getMessageVo(loginUserId, content);
+        // 创建WSBaseResp对象
+        WSBaseResp<ChatMessageResp> wsBaseResp = new WSBaseResp<>();
+        // 设置房间ID
+        chatMessageResp.setRoomId(groupMessageDTO.getToRoomId());
         // 设置数据和类型
         wsBaseResp.setData(chatMessageResp);
         wsBaseResp.setType(WSReqTypeEnum.CHAT.getType());

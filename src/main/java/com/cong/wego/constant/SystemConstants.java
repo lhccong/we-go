@@ -17,6 +17,9 @@ public interface SystemConstants {
      */
     String SALT = "cong";
 
-
+    /**
+     * 系统群聊房间 id
+     */
+    Long SYSTEM_ROOM_ID = 1L;
 }
 

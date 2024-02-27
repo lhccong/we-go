@@ -1,22 +1,18 @@
 package com.cong.wego.service.impl;
 
-import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.cong.wego.mapper.RoomFriendMapper;
+import com.cong.wego.mapper.RoomMapper;
 import com.cong.wego.model.dto.chat.RoomQueryRequest;
 import com.cong.wego.model.entity.*;
-import com.cong.wego.model.enums.chat.MessageTypeEnum;
+import com.cong.wego.model.enums.chat.RoomTypeEnum;
 import com.cong.wego.model.vo.room.RoomVo;
 import com.cong.wego.service.*;
-import com.cong.wego.mapper.RoomMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.sql.Array;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * @author 聪
@@ -32,6 +28,7 @@ public class RoomServiceImpl extends ServiceImpl<RoomMapper, Room>
     private final MessageService messageService;
     private final RoomFriendService roomFriendService;
     private final UserService userService;
+    private final RoomGroupService roomGroupService;
 
     @Override
     public Page<RoomVo> listRoomVoByPage(RoomQueryRequest roomQueryRequest) {
@@ -62,12 +59,20 @@ public class RoomServiceImpl extends ServiceImpl<RoomMapper, Room>
             Message message = messageService.getById(lastMsgId);
             if (message != null) {
                 roomVo.setContent(message.getContent());
-                roomVo.setActiveTime(item.getActiveTime());
-                roomVo.setType(item.getType());
             }
-            //4、查询私聊房间信息
-            RoomFriend roomFriend = roomFriendService.getOne(new LambdaQueryWrapper<RoomFriend>().eq(RoomFriend::getRoomId, item.getId()));
-            if (roomFriend != null) {
+            roomVo.setActiveTime(item.getActiveTime());
+            roomVo.setType(item.getType());
+
+            //判断房间类型
+            if (Objects.equals(item.getType(), RoomTypeEnum.GROUP.getType())) {
+                //群聊
+                RoomGroup roomGroup = roomGroupService.getOne(new LambdaQueryWrapper<RoomGroup>().eq(RoomGroup::getRoomId, item.getId()));
+                roomVo.setAvatar(roomGroup.getAvatar());
+                roomVo.setRoomName(roomGroup.getName());
+                roomVo.setUserId(roomGroup.getOwnerId());
+            } else {
+                //4、查询私聊房间信息
+                RoomFriend roomFriend = roomFriendService.getOne(new LambdaQueryWrapper<RoomFriend>().eq(RoomFriend::getRoomId, item.getId()));
                 Long userId = Objects.equals(roomFriend.getUid1(), loginUserId) ? roomFriend.getUid2() : roomFriend.getUid1();
                 //5、查询好友信息
                 User user = userService.getById(userId);
@@ -75,6 +80,7 @@ public class RoomServiceImpl extends ServiceImpl<RoomMapper, Room>
                 roomVo.setRoomName(user.getUserName());
                 roomVo.setUserId(userId);
             }
+
         }
         Page<RoomVo> roomVoPage = new Page<>(current, size, page.getTotal());
         List<RoomVo> roomVoList = new ArrayList<>(roomVoMap.values());

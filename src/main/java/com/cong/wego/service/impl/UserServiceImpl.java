@@ -1,6 +1,9 @@
 package com.cong.wego.service.impl;
 
 import static com.cong.wego.constant.SystemConstants.SALT;
+import static com.cong.wego.constant.SystemConstants.SYSTEM_ROOM_ID;
+import static com.cong.wego.constant.UserConstant.DEFAULT_AVATAR;
+import static com.cong.wego.constant.UserConstant.DEFAULT_NICKNAME;
 
 import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
@@ -15,16 +18,21 @@ import com.cong.wego.exception.BusinessException;
 import com.cong.wego.mapper.UserMapper;
 import com.cong.wego.model.dto.user.UserQueryRequest;
 import com.cong.wego.model.entity.User;
+import com.cong.wego.model.entity.UserRoomRelate;
 import com.cong.wego.model.enums.UserRoleEnum;
 import com.cong.wego.model.vo.user.LoginUserVO;
 import com.cong.wego.model.vo.user.TokenLoginUserVo;
 import com.cong.wego.model.vo.user.UserVO;
+import com.cong.wego.service.UserRoomRelateService;
 import com.cong.wego.service.UserService;
 import com.cong.wego.utils.SqlUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+
 import lombok.extern.slf4j.Slf4j;
 import me.chanjar.weixin.common.bean.WxOAuth2UserInfo;
 import org.apache.commons.lang3.StringUtils;
@@ -40,6 +48,8 @@ import org.springframework.util.DigestUtils;
 @Slf4j
 public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements UserService {
 
+    @Resource
+    private UserRoomRelateService userRoomRelateService;
 
     @Override
     public long userRegister(String userAccount, String userPassword, String checkPassword) {
@@ -71,11 +81,21 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
             User user = new User();
             user.setUserAccount(userAccount);
             user.setUserPassword(encryptPassword);
+            user.setUserAvatar(DEFAULT_AVATAR);
+            //默认名称+当前时间戳
+            user.setUserName(DEFAULT_NICKNAME+System.currentTimeMillis());
             boolean saveResult = this.save(user);
             if (!saveResult) {
                 throw new BusinessException(ErrorCode.SYSTEM_ERROR, "注册失败，数据库错误");
             }
-            return user.getId();
+            //用户id
+            Long userId = user.getId();
+            //4、加入系统群聊
+            UserRoomRelate userRoomRelate = new UserRoomRelate();
+            userRoomRelate.setRoomId(SYSTEM_ROOM_ID);
+            userRoomRelate.setUserId(userId);
+            userRoomRelateService.save(userRoomRelate);
+            return userId;
         }
     }
 
@@ -109,6 +129,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         StpUtil.getTokenSession().set(SystemConstants.USER_LOGIN_STATE, user);
         return this.getTokenLoginUserVO(user);
     }
+
     public TokenLoginUserVo getTokenLoginUserVO(User user) {
         if (user == null) {
             return null;
@@ -120,10 +141,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         loginUserVO.setSaTokenInfo(tokenInfo);
         return loginUserVO;
     }
+
     @Override
-    public LoginUserVO userLoginByMpOpen(WxOAuth2UserInfo wxOAuth2UserInfo) {
-        String unionId = wxOAuth2UserInfo.getUnionId();
-        String mpOpenId = wxOAuth2UserInfo.getOpenid();
+    public LoginUserVO userLoginByMpOpen(WxOAuth2UserInfo wxOauth2UserInfo) {
+        String unionId = wxOauth2UserInfo.getUnionId();
+        String mpOpenId = wxOauth2UserInfo.getOpenid();
         // 单机锁
         synchronized (unionId.intern()) {
             // 查询用户是否已存在
@@ -139,8 +161,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
                 user = new User();
                 user.setUnionId(unionId);
                 user.setMpOpenId(mpOpenId);
-                user.setUserAvatar(wxOAuth2UserInfo.getHeadImgUrl());
-                user.setUserName(wxOAuth2UserInfo.getNickname());
+                user.setUserAvatar(wxOauth2UserInfo.getHeadImgUrl());
+                user.setUserName(wxOauth2UserInfo.getNickname());
                 boolean result = this.save(user);
                 if (!result) {
                     throw new BusinessException(ErrorCode.SYSTEM_ERROR, "登录失败");

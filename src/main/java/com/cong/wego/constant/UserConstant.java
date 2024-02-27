@@ -11,6 +11,9 @@ public interface UserConstant {
      */
     String USER_LOGIN_STATE = "user_login";
 
+    String DEFAULT_AVATAR = "https://img2.baidu.com/it/u=1661624596,544958493&fm=253&app=138&size=w931&n=0&f=JPEG&fmt=auto?sec=1709139600&t=8bd455a8d9fa53929c892bc3d0ba556d";
+
+    String DEFAULT_NICKNAME = "用户";
     //  region 权限
 
     /**
