@@ -46,7 +46,7 @@ create index idx_create_time
     on room (createTime);
 create index idx_update_time
     on room (updateTime);
-
+INSERT INTO wego.room (id, type, hotFlag, activeTime, lastMsgId, extJson, createTime, updateTime) VALUES (1, 1, 0, '2024-02-26 16:25:07.471', 186, null, '2024-02-26 16:25:07.471', '2024-02-27 14:15:59.073');
 
 DROP TABLE IF EXISTS `message`;
 create table message
@@ -121,6 +121,7 @@ create index idx_room_id
     on room_group (roomId);
 create index idx_update_time
     on room_group (updateTime);
+INSERT INTO wego.room_group (id, ownerId, roomId, name, avatar, extJson, deleteStatus, createTime, updateTime) VALUES (1, 1, 1, '微狗官方交流群', 'https://img2.baidu.com/it/u=3297085993,740094813&fm=253&app=138&size=w931&n=0&f=JPEG&fmt=auto?sec=1709053200&t=2420f9fa855f1c6474d5fa93eeadc987', null, 0, '2024-02-26 16:27:12.668', '2024-02-26 16:27:12.668');
 
 -- 用户房间关系表
 DROP TABLE IF EXISTS `user_room_relate`;
