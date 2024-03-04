@@ -4,7 +4,10 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cong.wego.model.dto.chat.RoomQueryRequest;
 import com.cong.wego.model.entity.Room;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.cong.wego.model.vo.friend.FriendContentVo;
 import com.cong.wego.model.vo.room.RoomVo;
+
+import java.util.List;
 
 /**
 * @author 聪
@@ -20,4 +23,11 @@ public interface RoomService extends IService<Room> {
      * @return {@link Page}<{@link RoomVo}>
      */
     Page<RoomVo> listRoomVoByPage(RoomQueryRequest roomQueryRequest);
+
+    /**
+     * 列出好友内容 vo
+     *
+     * @return {@link List}<{@link FriendContentVo}>
+     */
+    List<FriendContentVo> listFriendContentVo();
 }

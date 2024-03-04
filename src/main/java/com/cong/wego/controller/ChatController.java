@@ -6,6 +6,7 @@ import com.cong.wego.common.BaseResponse;
 import com.cong.wego.common.ResultUtils;
 import com.cong.wego.model.dto.chat.MessageQueryRequest;
 import com.cong.wego.model.dto.chat.RoomQueryRequest;
+import com.cong.wego.model.vo.friend.FriendContentVo;
 import com.cong.wego.model.vo.room.RoomVo;
 import com.cong.wego.model.vo.ws.response.ChatMessageResp;
 import com.cong.wego.service.MessageService;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * 聊天控制器
@@ -46,5 +49,12 @@ public class ChatController {
     public BaseResponse<Page<ChatMessageResp>> listMessageVoByPage(@RequestBody MessageQueryRequest messageQueryRequest) {
         Page<ChatMessageResp> messageVoPage = messageService.listMessageVoByPage(messageQueryRequest);
         return ResultUtils.success(messageVoPage);
+    }
+
+    @PostMapping("/friend/list/vo")
+    @ApiOperation(value = "获取好友列表")
+    public BaseResponse<List<FriendContentVo>> listFriendContentVo() {
+        List<FriendContentVo> list =  roomService.listFriendContentVo();
+        return ResultUtils.success(list);
     }
 }

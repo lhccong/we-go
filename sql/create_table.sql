@@ -135,3 +135,16 @@ CREATE TABLE `user_room_relate`  (
      PRIMARY KEY (`id`) USING BTREE,
      INDEX `idx_user_room_id`(userId, roomId) USING BTREE
 );
+
+-- 用户好友关系表
+DROP TABLE IF EXISTS `user_friend_relate`;
+CREATE TABLE `user_friend_relate`  (
+     id bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+     userId bigint(20) NOT NULL COMMENT '用户 id',
+     relateId bigint(20) NOT NULL COMMENT '关系 id',
+     relateType int  NULL COMMENT '关系类型 1群聊 2好友',
+     createTime timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+     updateTime timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+     PRIMARY KEY (`id`) USING BTREE,
+     INDEX `idx_user_friend_id`(userId) USING BTREE
+);
