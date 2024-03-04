@@ -1,8 +1,6 @@
 package com.cong.wego.common.listener;
 
-import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.cong.wego.common.event.UserOnlineEvent;
 import com.cong.wego.common.event.UserPrivateMessageEvent;
 import com.cong.wego.model.dto.ws.PrivateMessageDTO;
 import com.cong.wego.model.entity.Message;
@@ -15,13 +13,10 @@ import com.cong.wego.service.MessageService;
 import com.cong.wego.service.RoomFriendService;
 import com.cong.wego.service.RoomService;
 import com.cong.wego.service.UserRoomRelateService;
-import com.cong.wego.websocket.utils.NettyUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-
-import java.sql.Array;
 import java.util.ArrayList;
 
 /**

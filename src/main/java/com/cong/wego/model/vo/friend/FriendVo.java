@@ -12,9 +12,14 @@ import lombok.Data;
 public class FriendVo {
 
     /**
-     * 关系id 根据外层来判断是好友还是群
+     * 房间id
      */
-    private Long relateId;
+    private Long roomId;
+
+    /**
+     *用户id
+     */
+    private Long uid;
 
     /**
      * 头像

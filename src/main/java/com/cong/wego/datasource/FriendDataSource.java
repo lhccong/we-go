@@ -1,13 +1,15 @@
 package com.cong.wego.datasource;
 
+import cn.dev33.satoken.stp.StpUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.cong.wego.model.entity.RoomFriend;
 import com.cong.wego.model.entity.User;
 import com.cong.wego.model.enums.chat.FriendSearchTypeEnum;
 import com.cong.wego.model.vo.friend.FriendContentVo;
 import com.cong.wego.model.vo.friend.FriendVo;
+import com.cong.wego.service.RoomFriendService;
 import com.cong.wego.service.UserService;
 import org.springframework.stereotype.Component;
-
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,8 +24,13 @@ import java.util.stream.Collectors;
 public class FriendDataSource implements DataSource {
     @Resource
     private UserService userService;
+    @Resource
+    private RoomFriendService roomFriendService;
+
     @Override
     public FriendContentVo doSearch(List<Long> ids) {
+        //获取登录用户id
+        Long loginUserId = Long.valueOf(StpUtil.getLoginId().toString());
         // 创建一个FriendContentVo实例
         FriendContentVo friendContentVo = new FriendContentVo();
 
@@ -41,7 +48,15 @@ public class FriendDataSource implements DataSource {
             // 设置用户名
             friendVo.setName(item.getUserName());
             // 设置用户ID
-            friendVo.setRelateId(item.getId());
+            friendVo.setUid(item.getId());
+            //获取房间ID
+            long uid1 = item.getId() > loginUserId ? loginUserId : item.getId();
+            long uid2 = item.getId() > loginUserId ? item.getId() : loginUserId;
+            RoomFriend roomFriend = roomFriendService.getOne(new LambdaQueryWrapper<RoomFriend>().eq(RoomFriend::getUid1, uid1).eq(RoomFriend::getUid2, uid2));
+            // 设置房间ID
+            if (roomFriend != null) {
+                friendVo.setRoomId(roomFriend.getRoomId());
+            }
             return friendVo;
         }).collect(Collectors.toList());
 

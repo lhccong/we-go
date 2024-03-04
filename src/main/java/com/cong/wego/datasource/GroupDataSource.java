@@ -41,7 +41,7 @@ public class GroupDataSource implements DataSource {
             // 设置房间名称
             friendVo.setName(item.getName());
             // 设置房间ID
-            friendVo.setRelateId(item.getRoomId());
+            friendVo.setRoomId(item.getRoomId());
             return friendVo;
         }).collect(Collectors.toList());
 
