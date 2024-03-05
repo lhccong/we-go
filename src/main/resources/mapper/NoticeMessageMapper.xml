@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cong.wego.mapper.NoticeMessageMapper">
+
+    <resultMap id="BaseResultMap" type="com.cong.wego.model.entity.NoticeMessage">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="userId" column="userId" jdbcType="BIGINT"/>
+            <result property="toUserId" column="toUserId" jdbcType="BIGINT"/>
+            <result property="noticeType" column="noticeType" jdbcType="INTEGER"/>
+            <result property="noticeContent" column="noticeContent" jdbcType="VARCHAR"/>
+            <result property="readTarget" column="readTarget" jdbcType="TINYINT"/>
+            <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
+            <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,userId,toUserId,
+        noticeType,noticeContent,readTarget,
+        createTime,updateTime
+    </sql>
+</mapper>

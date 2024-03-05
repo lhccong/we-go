@@ -148,3 +148,17 @@ CREATE TABLE `user_friend_relate`  (
      PRIMARY KEY (`id`) USING BTREE,
      INDEX `idx_user_friend_id`(userId) USING BTREE
 );
+
+-- 消息通知表
+DROP TABLE IF EXISTS `notice_message`;
+CREATE TABLE `notice_message`  (
+       id bigint(20) NOT NULL AUTO_INCREMENT COMMENT '主键',
+       userId bigint(20) NOT NULL COMMENT '用户 id',
+       toUserId bigint(20) NOT NULL COMMENT '接收用户id',
+       noticeType int  NULL COMMENT '消息通知类型 1 系统通知 2 群聊通知 3 好友通知',
+       noticeContent varchar(512)  NULL COMMENT '消息通知内容',
+       readTarget tinyint  NOT NULL default 0 COMMENT '消息通知标识 0 未读 1 已读',
+       createTime timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+       updateTime timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+       PRIMARY KEY (`id`)
+);
