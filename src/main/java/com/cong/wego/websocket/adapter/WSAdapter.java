@@ -1,6 +1,5 @@
 package com.cong.wego.websocket.adapter;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.cong.wego.model.dto.ws.GroupMessageDTO;
 import com.cong.wego.model.dto.ws.PrivateMessageDTO;
 import com.cong.wego.model.entity.RoomFriend;
@@ -27,7 +26,6 @@ public class WSAdapter {
     private UserService userService;
     @Resource
     private RoomFriendService roomFriendService;
-
     public WSBaseResp<ChatMessageResp> buildPrivateMessageResp(PrivateMessageDTO privateMessageDTO) {
         // 获取私信的发送者
         Long loginUserId = privateMessageDTO.getFromUserId();
@@ -38,10 +36,7 @@ public class WSAdapter {
         WSBaseResp<ChatMessageResp> wsBaseResp = new WSBaseResp<>();
         // 设置房间ID
         Long toUserId = privateMessageDTO.getToUserId();
-        long uid1 = loginUserId > toUserId ? toUserId : loginUserId;
-        long uid2 = loginUserId > toUserId ? loginUserId : toUserId;
-        RoomFriend roomFriend = roomFriendService.getOne(new LambdaQueryWrapper<RoomFriend>()
-                .eq(RoomFriend::getUid1, uid1).eq(RoomFriend::getUid2, uid2));
+        RoomFriend roomFriend = roomFriendService.getRoomFriend(toUserId);
         if (roomFriend != null) {
             chatMessageResp.setRoomId(roomFriend.getRoomId());
         }

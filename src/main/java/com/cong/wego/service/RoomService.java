@@ -2,8 +2,10 @@ package com.cong.wego.service;
 
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.cong.wego.model.dto.chat.RoomQueryRequest;
+import com.cong.wego.model.dto.friend.FriendQueryRequest;
 import com.cong.wego.model.entity.Room;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.cong.wego.model.vo.friend.AddFriendVo;
 import com.cong.wego.model.vo.friend.FriendContentVo;
 import com.cong.wego.model.vo.room.RoomVo;
 
@@ -30,4 +32,14 @@ public interface RoomService extends IService<Room> {
      * @return {@link List}<{@link FriendContentVo}>
      */
     List<FriendContentVo> listFriendContentVo();
+
+    /**
+     * 搜索好友 vo
+     *
+     * @param friendQueryRequest 好友查询请求
+     * @return {@link AddFriendVo}
+     */
+    AddFriendVo searchFriendVo(FriendQueryRequest friendQueryRequest);
+
+
 }

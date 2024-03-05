@@ -10,4 +10,12 @@ import com.baomidou.mybatisplus.extension.service.IService;
 */
 public interface RoomFriendService extends IService<RoomFriend> {
 
+    /**
+     * 获取房间好友
+     *
+     * @param uid 用户ID
+     * @return {@link RoomFriend}
+     */
+    RoomFriend getRoomFriend(Long uid);
+
 }
