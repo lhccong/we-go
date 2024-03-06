@@ -4,6 +4,8 @@ import com.cong.wego.common.BaseResponse;
 import com.cong.wego.common.ResultUtils;
 import com.cong.wego.model.dto.friend.FriendAddRequest;
 import com.cong.wego.model.entity.User;
+import com.cong.wego.model.vo.message.MessageNumVo;
+import com.cong.wego.model.vo.message.NoticeMessageVo;
 import com.cong.wego.service.NoticeMessageService;
 import com.cong.wego.service.UserService;
 import com.cong.wego.sse.SseServer;
@@ -13,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+
+import java.util.List;
 
 import static com.cong.wego.constant.NoticeConstant.USER_KEY;
 
@@ -44,9 +48,20 @@ public class NoticeMessageController {
     @GetMapping("/userConnect")
     @ApiOperation(value = "SSE连接请求")
     public SseEmitter connect(String token) {
-//         一般取登录用户账号作为 messageId。分组的话需要约定 messageId的格式。
+        //一般取登录用户账号作为 messageId。分组的话需要约定 messageId的格式。
         User loginUser = userService.getLoginUser(token);
         String userId = USER_KEY + loginUser.getId();
         return SseServer.createConnect(userId);
+    }
+
+    @GetMapping("/messageNum")
+    @ApiOperation(value = "获取消息数量")
+    public BaseResponse<MessageNumVo> getMessageNum() {
+        return ResultUtils.success(noticeMessageService.getMessageNum());
+    }
+    @GetMapping("/messageNotice/list")
+    @ApiOperation(value = "获取消息列表")
+    public BaseResponse<List<NoticeMessageVo>> getMessageNoticeList() {
+        return ResultUtils.success(noticeMessageService.getMessageNoticeList());
     }
 }

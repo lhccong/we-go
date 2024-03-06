@@ -44,7 +44,7 @@ public class SseServer {
      */
     public static SseEmitter createConnect(String messageId) {
         //设置连接超时时间。0表示不过期，默认是30秒，超过时间未完成会抛出异常
-        SseEmitter sseEmitter = new SseEmitter();
+        SseEmitter sseEmitter = new SseEmitter(0L);
         try {
             sseEmitter.send(
                     SseEmitter.event()

@@ -22,8 +22,6 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class RedisUtils {
 
-    public RedisTemplate redisTemplate;
-
     private static StringRedisTemplate stringRedisTemplate;
 
     @PostConstruct

@@ -10,6 +10,7 @@ import lombok.Data;
 
 /**
  * 
+ * @author liuhuaicong
  * @TableName notice_message
  */
 @TableName(value ="notice_message")
