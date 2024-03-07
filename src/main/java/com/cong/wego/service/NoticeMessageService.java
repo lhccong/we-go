@@ -33,4 +33,10 @@ public interface NoticeMessageService extends IService<NoticeMessage> {
      * @return {@link List}<{@link NoticeMessageVo}>
      */
     List<NoticeMessageVo> getMessageNoticeList();
+
+    /**
+     * @param id 消息通知id
+     * @return {@link Boolean}
+     */
+    Boolean readMessageNotice(Long id);
 }

@@ -11,11 +11,13 @@ import java.util.Date;
 @Data
 public class NoticeMessageVo {
     /**
+     * 消息通知id
+     */
+    private Long id;
+    /**
      * 用户 id
      */
     private Long userId;
-
-
     /**
      * 消息通知类型 1 系统通知 2 群聊通知 3 好友通知
      */

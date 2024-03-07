@@ -122,6 +122,20 @@ public class NoticeMessageServiceImpl extends ServiceImpl<NoticeMessageMapper, N
         }).collect(Collectors.toList());
     }
 
+    @Override
+    public Boolean readMessageNotice(Long id) {
+        // 根据通知消息ID查询通知消息
+        NoticeMessage noticeMessage = this.getById(id);
+        // 如果通知消息不存在，抛出业务异常
+        if (noticeMessage == null) {
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "消息不存在");
+        }
+        //修改消息状态
+        noticeMessage.setReadTarget(ReadTargetTypeEnum.READ.getType());
+        // 更新通知消息的状态
+        return this.updateById(noticeMessage);
+    }
+
 }
 
 

@@ -64,4 +64,9 @@ public class NoticeMessageController {
     public BaseResponse<List<NoticeMessageVo>> getMessageNoticeList() {
         return ResultUtils.success(noticeMessageService.getMessageNoticeList());
     }
+    @GetMapping("/messageNotice/read")
+    @ApiOperation(value = "消息已读")
+    public BaseResponse<Boolean> readMessageNotice(Long id) {
+        return ResultUtils.success(noticeMessageService.readMessageNotice(id));
+    }
 }
