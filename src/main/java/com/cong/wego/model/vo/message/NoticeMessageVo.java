@@ -25,7 +25,10 @@ public class NoticeMessageVo {
      * 通知标题
      */
     private String title;
-
+    /**
+     * 消息通知标识 0 未读 1 已读
+     */
+    private Integer readTarget;
     /**
      * 消息通知内容
      */
