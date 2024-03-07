@@ -11,6 +11,7 @@
             <result property="noticeType" column="noticeType" jdbcType="INTEGER"/>
             <result property="noticeContent" column="noticeContent" jdbcType="VARCHAR"/>
             <result property="readTarget" column="readTarget" jdbcType="TINYINT"/>
+            <result property="processResult" column="processResult" jdbcType="VARCHAR"/>
             <result property="createTime" column="createTime" jdbcType="TIMESTAMP"/>
             <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
     </resultMap>
@@ -18,6 +19,6 @@
     <sql id="Base_Column_List">
         id,userId,toUserId,
         noticeType,noticeContent,readTarget,
-        createTime,updateTime
+        processResult,createTime,updateTime
     </sql>
 </mapper>

@@ -1,8 +1,9 @@
 package com.cong.wego.service;
 
+import com.cong.wego.model.dto.chat.MessageNoticeUpdateRequest;
 import com.cong.wego.model.dto.friend.FriendAddRequest;
-import com.cong.wego.model.entity.NoticeMessage;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.cong.wego.model.entity.NoticeMessage;
 import com.cong.wego.model.vo.message.MessageNumVo;
 import com.cong.wego.model.vo.message.NoticeMessageVo;
 
@@ -39,4 +40,11 @@ public interface NoticeMessageService extends IService<NoticeMessage> {
      * @return {@link Boolean}
      */
     Boolean readMessageNotice(Long id);
+
+    /**
+     * 处理消息通知
+     * @param noticeUpdateRequest 消息通知更新请求
+     * @return {@link String}
+     */
+    String handleMessageNotice(MessageNoticeUpdateRequest noticeUpdateRequest);
 }

@@ -48,6 +48,11 @@ public class NoticeMessage implements Serializable {
     private Integer readTarget;
 
     /**
+     * 处理结果
+     */
+    private String processResult;
+
+    /**
      * 创建时间
      */
     private Date createTime;

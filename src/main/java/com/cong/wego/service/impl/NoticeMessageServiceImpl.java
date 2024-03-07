@@ -1,22 +1,30 @@
 package com.cong.wego.service.impl;
 
+import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.cong.wego.common.ErrorCode;
 import com.cong.wego.exception.BusinessException;
+import com.cong.wego.mapper.NoticeMessageMapper;
+import com.cong.wego.model.dto.chat.MessageNoticeUpdateRequest;
 import com.cong.wego.model.dto.friend.FriendAddRequest;
 import com.cong.wego.model.entity.NoticeMessage;
 import com.cong.wego.model.entity.User;
+import com.cong.wego.model.enums.ProcessResultTypeEnum;
+import com.cong.wego.model.enums.chat.MessageTypeEnum;
 import com.cong.wego.model.enums.chat.NoticeTypeEnum;
 import com.cong.wego.model.enums.chat.ReadTargetTypeEnum;
+import com.cong.wego.model.enums.ws.WSReqTypeEnum;
+import com.cong.wego.model.vo.message.ChatMessageVo;
 import com.cong.wego.model.vo.message.MessageNumVo;
 import com.cong.wego.model.vo.message.NoticeMessageVo;
+import com.cong.wego.model.vo.ws.request.WSBaseReq;
 import com.cong.wego.service.NoticeMessageService;
-import com.cong.wego.mapper.NoticeMessageMapper;
 import com.cong.wego.service.UserService;
 import com.cong.wego.sse.SseServer;
+import com.cong.wego.websocket.service.WebSocketService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +33,7 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.cong.wego.constant.MessageConstant.ADD_USER_MESSAGE;
 import static com.cong.wego.constant.NoticeConstant.USER_KEY;
 
 /**
@@ -37,6 +46,8 @@ public class NoticeMessageServiceImpl extends ServiceImpl<NoticeMessageMapper, N
         implements NoticeMessageService {
     @Resource
     private UserService userService;
+    @Resource
+    private WebSocketService webSocketService;
 
     @Override
     public void addFriend(FriendAddRequest friendAddRequest) {
@@ -134,6 +145,50 @@ public class NoticeMessageServiceImpl extends ServiceImpl<NoticeMessageMapper, N
         noticeMessage.setReadTarget(ReadTargetTypeEnum.READ.getType());
         // 更新通知消息的状态
         return this.updateById(noticeMessage);
+    }
+
+    @Override
+    public String handleMessageNotice(MessageNoticeUpdateRequest noticeUpdateRequest) {
+        // 根据通知消息ID查询通知消息
+        NoticeMessage noticeMessage = this.getOne(new LambdaQueryWrapper<NoticeMessage>()
+                .eq(NoticeMessage::getId, noticeUpdateRequest.getId())
+                .eq(NoticeMessage::getToUserId, Long.valueOf(StpUtil.getLoginId().toString())));
+        // 如果通知消息不存在，抛出业务异常
+        if (noticeMessage == null) {
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR, "消息不存在");
+        }
+        // 初始化描述信息为空格
+        String desc = " ";
+        // 判断通知类型是否为用户类型
+        if (NoticeTypeEnum.of(noticeMessage.getNoticeType()) == NoticeTypeEnum.USER) {
+            // 根据处理结果获取描述信息，并更新通知消息的处理结果
+            desc = ProcessResultTypeEnum.of(noticeUpdateRequest.getProcessResult()).getDesc();
+            noticeMessage.setProcessResult(desc);
+            noticeMessage.setReadTarget(ReadTargetTypeEnum.READ.getType());
+            if (noticeUpdateRequest.getProcessResult().equals(ProcessResultTypeEnum.AGREE.getType())) {
+                // 如果处理结果为同意
+                // 获取用户token信息
+                SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
+                // 构建WebSocket消息基础请求
+                WSBaseReq wsBaseReq = new WSBaseReq();
+                wsBaseReq.setType(WSReqTypeEnum.CHAT.getType());
+                wsBaseReq.setUserId(noticeMessage.getUserId());
+                // 构建聊天消息体
+                ChatMessageVo chatMessageVo = new ChatMessageVo();
+                chatMessageVo.setType(MessageTypeEnum.PRIVATE.getType());
+                chatMessageVo.setContent(ADD_USER_MESSAGE);
+                // 将聊天消息体序列化为JSON字符串，设置为消息数据
+                wsBaseReq.setData(JSONUtil.toJsonStr(chatMessageVo));
+                // 发送WebSocket消息
+                webSocketService.sendMessage(tokenInfo.tokenValue, wsBaseReq);
+            }
+
+        }
+
+
+        this.updateById(noticeMessage);
+
+        return desc;
     }
 
 }

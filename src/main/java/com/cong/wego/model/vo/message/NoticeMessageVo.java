@@ -32,6 +32,10 @@ public class NoticeMessageVo {
      */
     private Integer readTarget;
     /**
+     * 处理结果
+     */
+    private String processResult;
+    /**
      * 消息通知内容
      */
     private String noticeContent;

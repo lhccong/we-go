@@ -160,6 +160,21 @@ public class WebSocketServiceImpl implements WebSocketService {
         if (CharSequenceUtil.isEmpty(token)) {
             sendMsg(channel, errorResp);
         }
+        sendByType(chatMessageVo, token, uid);
+
+    }
+    @Override
+    public void sendMessage(String token, WSBaseReq req) {
+        // 发送数据
+        String content = req.getData();
+        ChatMessageVo chatMessageVo = JSONUtil.toBean(content, ChatMessageVo.class);
+        // 接收消息 用户id
+        Long uid = req.getUserId();
+        sendByType(chatMessageVo, token, uid);
+
+    }
+
+    private void sendByType(ChatMessageVo chatMessageVo, String token, Long uid) {
         MessageTypeEnum messageTypeEnum = MessageTypeEnum.of(chatMessageVo.getType());
         String messageContent = chatMessageVo.getContent();
         long loginUserId = Long.parseLong(StpUtil.getLoginIdByToken(token).toString());
@@ -185,10 +200,8 @@ public class WebSocketServiceImpl implements WebSocketService {
                 sendGroupMessage(groupMessageDTO);
                 break;
             default:
-                sendMsg(channel, errorResp);
                 break;
         }
-
     }
 
     private void sendGroupMessage(GroupMessageDTO groupMessageDTO) {

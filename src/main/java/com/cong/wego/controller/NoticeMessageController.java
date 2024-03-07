@@ -2,6 +2,7 @@ package com.cong.wego.controller;
 
 import com.cong.wego.common.BaseResponse;
 import com.cong.wego.common.ResultUtils;
+import com.cong.wego.model.dto.chat.MessageNoticeUpdateRequest;
 import com.cong.wego.model.dto.friend.FriendAddRequest;
 import com.cong.wego.model.entity.User;
 import com.cong.wego.model.vo.message.MessageNumVo;
@@ -69,4 +70,10 @@ public class NoticeMessageController {
     public BaseResponse<Boolean> readMessageNotice(Long id) {
         return ResultUtils.success(noticeMessageService.readMessageNotice(id));
     }
+    @PostMapping("/messageNotice/handle")
+    @ApiOperation(value = "消息处理")
+    public BaseResponse<String> handleMessageNotice(@RequestBody MessageNoticeUpdateRequest noticeUpdateRequest) {
+        return ResultUtils.success(noticeMessageService.handleMessageNotice(noticeUpdateRequest));
+    }
+
 }

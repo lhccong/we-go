@@ -1,7 +1,6 @@
 package com.cong.wego.websocket.service;
 
 
-import com.cong.wego.model.vo.ws.request.WSAuthorize;
 import com.cong.wego.model.vo.ws.request.WSBaseReq;
 import com.cong.wego.model.vo.ws.response.WSBaseResp;
 import io.netty.channel.Channel;
@@ -53,5 +52,6 @@ public interface WebSocketService {
     void sendToUid(WSBaseResp<?> wsBaseResp, Long uid);
 
     void sendMessage(Channel channel, WSBaseReq req);
+    void sendMessage(String token, WSBaseReq req);
 
 }

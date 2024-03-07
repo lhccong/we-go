@@ -158,6 +158,7 @@ CREATE TABLE `notice_message`  (
        noticeType int  NULL COMMENT '消息通知类型 1 系统通知 2 群聊通知 3 好友通知',
        noticeContent varchar(512)  NULL COMMENT '消息通知内容',
        readTarget tinyint  NOT NULL default 0 COMMENT '消息通知标识 0 未读 1 已读',
+       processResult varchar(128) NULL COMMENT '处理结果',
        createTime timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
        updateTime timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
        PRIMARY KEY (`id`)
