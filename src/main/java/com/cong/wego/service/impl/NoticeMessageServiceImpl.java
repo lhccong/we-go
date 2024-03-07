@@ -12,16 +12,19 @@ import com.cong.wego.model.dto.chat.MessageNoticeUpdateRequest;
 import com.cong.wego.model.dto.friend.FriendAddRequest;
 import com.cong.wego.model.entity.NoticeMessage;
 import com.cong.wego.model.entity.User;
+import com.cong.wego.model.entity.UserFriendRelate;
 import com.cong.wego.model.enums.ProcessResultTypeEnum;
 import com.cong.wego.model.enums.chat.MessageTypeEnum;
 import com.cong.wego.model.enums.chat.NoticeTypeEnum;
 import com.cong.wego.model.enums.chat.ReadTargetTypeEnum;
+import com.cong.wego.model.enums.chat.RoomTypeEnum;
 import com.cong.wego.model.enums.ws.WSReqTypeEnum;
 import com.cong.wego.model.vo.message.ChatMessageVo;
 import com.cong.wego.model.vo.message.MessageNumVo;
 import com.cong.wego.model.vo.message.NoticeMessageVo;
 import com.cong.wego.model.vo.ws.request.WSBaseReq;
 import com.cong.wego.service.NoticeMessageService;
+import com.cong.wego.service.UserFriendRelateService;
 import com.cong.wego.service.UserService;
 import com.cong.wego.sse.SseServer;
 import com.cong.wego.websocket.service.WebSocketService;
@@ -30,6 +33,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,6 +52,9 @@ public class NoticeMessageServiceImpl extends ServiceImpl<NoticeMessageMapper, N
     private UserService userService;
     @Resource
     private WebSocketService webSocketService;
+
+    @Resource
+    private UserFriendRelateService userFriendRelateService;
 
     @Override
     public void addFriend(FriendAddRequest friendAddRequest) {
@@ -167,6 +174,7 @@ public class NoticeMessageServiceImpl extends ServiceImpl<NoticeMessageMapper, N
             noticeMessage.setReadTarget(ReadTargetTypeEnum.READ.getType());
             if (noticeUpdateRequest.getProcessResult().equals(ProcessResultTypeEnum.AGREE.getType())) {
                 // 如果处理结果为同意
+                saveUserRelate(noticeMessage);
                 // 获取用户token信息
                 SaTokenInfo tokenInfo = StpUtil.getTokenInfo();
                 // 构建WebSocket消息基础请求
@@ -185,10 +193,28 @@ public class NoticeMessageServiceImpl extends ServiceImpl<NoticeMessageMapper, N
 
         }
 
-
         this.updateById(noticeMessage);
 
         return desc;
+    }
+
+    private void saveUserRelate(NoticeMessage noticeMessage) {
+        // 创建用户和朋友的关系列表
+        ArrayList<UserFriendRelate> userFriendRelates = new ArrayList<>();
+
+        userFriendRelates.add(createUserFriendRelate(noticeMessage.getUserId(), noticeMessage.getToUserId(), RoomTypeEnum.PRIVATE.getType()));
+        userFriendRelates.add(createUserFriendRelate(noticeMessage.getToUserId(), noticeMessage.getUserId(), RoomTypeEnum.PRIVATE.getType()));
+
+        // 批量保存用户和朋友的关系
+        userFriendRelateService.saveBatch(userFriendRelates);
+
+    }
+    private UserFriendRelate createUserFriendRelate(Long userId, Long friendId, Integer relateType) {
+        UserFriendRelate relate = new UserFriendRelate();
+        relate.setUserId(userId);
+        relate.setRelateId(friendId);
+        relate.setRelateType(relateType);
+        return relate;
     }
 
 }
