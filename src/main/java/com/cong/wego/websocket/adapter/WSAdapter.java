@@ -1,5 +1,6 @@
 package com.cong.wego.websocket.adapter;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.cong.wego.model.dto.ws.GroupMessageDTO;
 import com.cong.wego.model.dto.ws.PrivateMessageDTO;
 import com.cong.wego.model.entity.RoomFriend;
@@ -36,7 +37,10 @@ public class WSAdapter {
         WSBaseResp<ChatMessageResp> wsBaseResp = new WSBaseResp<>();
         // 设置房间ID
         Long toUserId = privateMessageDTO.getToUserId();
-        RoomFriend roomFriend = roomFriendService.getRoomFriend(toUserId);
+        long uid1 = loginUserId > toUserId ? toUserId : loginUserId;
+        long uid2 = loginUserId > toUserId ? loginUserId : toUserId;
+        RoomFriend roomFriend = roomFriendService.getOne(new LambdaQueryWrapper<RoomFriend>()
+                .eq(RoomFriend::getUid1, uid1).eq(RoomFriend::getUid2, uid2));
         if (roomFriend != null) {
             chatMessageResp.setRoomId(roomFriend.getRoomId());
         }
