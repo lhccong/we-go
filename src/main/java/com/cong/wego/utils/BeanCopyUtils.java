@@ -1,5 +1,7 @@
 package com.cong.wego.utils;
 
+import com.cong.wego.common.ErrorCode;
+import com.cong.wego.exception.BusinessException;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
@@ -27,7 +29,7 @@ public class BeanCopyUtils {
             // 实现属性copy
             BeanUtils.copyProperties(source, result);
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR);
         }
         // 返回结果
         return result;
@@ -49,7 +51,7 @@ public class BeanCopyUtils {
             // 实现属性copy
             BeanUtils.copyProperties(source, result, getNullPropertyNames(source));
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR);
         }
         // 返回结果
         return result;

@@ -1,7 +1,6 @@
 package com.cong.wego.common.event;
 
 import com.cong.wego.model.dto.ws.PrivateMessageDTO;
-import com.cong.wego.model.entity.User;
 import lombok.Getter;
 import org.springframework.context.ApplicationEvent;
 

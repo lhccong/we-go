@@ -3,12 +3,15 @@ package com.cong.wego.model.enums;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import lombok.Getter;
 import org.apache.commons.lang3.ObjectUtils;
 
 /**
  * 用户角色枚举
  * # @author <a href="https://github.com/lhccong">程序员聪</a>
  */
+@Getter
 public enum UserRoleEnum {
 
     USER("用户", "user"),
@@ -53,11 +56,4 @@ public enum UserRoleEnum {
         return null;
     }
 
-    public String getValue() {
-        return value;
-    }
-
-    public String getText() {
-        return text;
-    }
 }

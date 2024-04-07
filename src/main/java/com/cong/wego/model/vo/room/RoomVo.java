@@ -1,7 +1,5 @@
 package com.cong.wego.model.vo.room;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.Data;
 
 import java.util.Date;

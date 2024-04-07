@@ -6,6 +6,9 @@ package com.cong.wego.common;
  */
 public class ResultUtils {
 
+    private ResultUtils() {
+
+    }
     /**
      * 成功
      *

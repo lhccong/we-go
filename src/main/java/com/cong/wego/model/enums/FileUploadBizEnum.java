@@ -3,12 +3,15 @@ package com.cong.wego.model.enums;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import lombok.Getter;
 import org.apache.commons.lang3.ObjectUtils;
 
 /**
  * 文件上传业务类型枚举
  * # @author <a href="https://github.com/lhccong">程序员聪</a>
  */
+@Getter
 public enum FileUploadBizEnum {
 
     USER_AVATAR("用户头像", "user_avatar");
@@ -51,11 +54,4 @@ public enum FileUploadBizEnum {
         return null;
     }
 
-    public String getValue() {
-        return value;
-    }
-
-    public String getText() {
-        return text;
-    }
 }

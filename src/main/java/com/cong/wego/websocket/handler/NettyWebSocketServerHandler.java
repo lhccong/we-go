@@ -3,7 +3,6 @@ package com.cong.wego.websocket.handler;
 import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.json.JSONUtil;
 import com.cong.wego.model.enums.ws.WSReqTypeEnum;
-import com.cong.wego.model.vo.ws.request.WSAuthorize;
 import com.cong.wego.model.vo.ws.request.WSBaseReq;
 import com.cong.wego.websocket.service.WebSocketService;
 import io.netty.channel.ChannelHandlerContext;

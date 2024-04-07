@@ -1,7 +1,7 @@
 package com.cong.wego.controller;
 
+import cn.dev33.satoken.annotation.SaCheckRole;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.cong.wego.annotation.AuthCheck;
 import com.cong.wego.common.BaseResponse;
 import com.cong.wego.common.DeleteRequest;
 import com.cong.wego.common.ErrorCode;
@@ -165,7 +165,7 @@ public class UserController {
      * @return {@link BaseResponse}<{@link Long}>
      */
     @PostMapping("/add")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    @SaCheckRole(UserConstant.ADMIN_ROLE)
     @ApiOperation(value = "创建用户")
     public BaseResponse<Long> addUser(@RequestBody UserAddRequest userAddRequest) {
         if (userAddRequest == null) {
@@ -189,7 +189,7 @@ public class UserController {
      * @return {@link BaseResponse}<{@link Boolean}>
      */
     @PostMapping("/delete")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    @SaCheckRole(UserConstant.ADMIN_ROLE)
     @ApiOperation(value = "删除用户")
     public BaseResponse<Boolean> deleteUser(@RequestBody DeleteRequest deleteRequest) {
         if (deleteRequest == null || deleteRequest.getId() <= 0) {
@@ -206,7 +206,7 @@ public class UserController {
      * @return {@link BaseResponse}<{@link Boolean}>
      */
     @PostMapping("/update")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    @SaCheckRole(UserConstant.ADMIN_ROLE)
     @ApiOperation(value = "更新用户")
     public BaseResponse<Boolean> updateUser(@RequestBody UserUpdateRequest userUpdateRequest) {
         if (userUpdateRequest == null || userUpdateRequest.getId() == null) {
@@ -226,7 +226,7 @@ public class UserController {
      * @return {@link BaseResponse}<{@link User}>
      */
     @GetMapping("/get")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    @SaCheckRole(UserConstant.ADMIN_ROLE)
     @ApiOperation(value = "根据 id 获取用户（仅管理员）")
     public BaseResponse<User> getUserById(long id) {
         if (id <= 0) {
@@ -258,7 +258,7 @@ public class UserController {
      * @return {@link BaseResponse}<{@link Page}<{@link User}>>
      */
     @PostMapping("/list/page")
-    @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
+    @SaCheckRole(UserConstant.ADMIN_ROLE)
     @ApiOperation(value = "分页获取用户列表（仅管理员）")
     public BaseResponse<Page<User>> listUserByPage(@RequestBody UserQueryRequest userQueryRequest) {
         long current = userQueryRequest.getCurrent();

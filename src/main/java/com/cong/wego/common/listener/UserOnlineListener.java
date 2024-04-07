@@ -6,14 +6,11 @@ import com.cong.wego.model.entity.User;
 import com.cong.wego.service.UserService;
 import com.cong.wego.websocket.adapter.WSAdapter;
 import com.cong.wego.websocket.cache.UserCache;
-import com.cong.wego.websocket.service.WebSocketService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
 
 /**
  * 用户上线监听器
@@ -25,10 +22,6 @@ import javax.annotation.Resource;
 @RequiredArgsConstructor
 public class UserOnlineListener {
 
-    /**
-     * Web 套接字服务
-     */
-    private final WebSocketService webSocketService;
     /**
      * 用户服务
      */

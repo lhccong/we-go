@@ -9,7 +9,7 @@ package com.cong.wego.utils;
 public class CommonUtils {
 
     private CommonUtils() {
-        throw new IllegalStateException("Utility class");
+
     }
     public static boolean isNumeric(String str) {
         if (str == null || str.isEmpty()) {

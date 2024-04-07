@@ -1,6 +1,5 @@
 package com.cong.wego.model.dto.ws;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

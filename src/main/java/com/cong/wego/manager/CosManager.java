@@ -2,7 +2,6 @@ package com.cong.wego.manager;
 
 import com.qcloud.cos.COSClient;
 import com.qcloud.cos.model.PutObjectRequest;
-import com.qcloud.cos.model.PutObjectResult;
 import com.cong.wego.config.CosClientConfig;
 import java.io.File;
 import javax.annotation.Resource;
@@ -26,12 +25,11 @@ public class CosManager {
      *
      * @param key           唯一键
      * @param localFilePath 本地文件路径
-     * @return {@link PutObjectResult}
      */
-    public PutObjectResult putObject(String key, String localFilePath) {
+    public void putObject(String key, String localFilePath) {
         PutObjectRequest putObjectRequest = new PutObjectRequest(cosClientConfig.getBucket(), key,
                 new File(localFilePath));
-        return cosClient.putObject(putObjectRequest);
+        cosClient.putObject(putObjectRequest);
     }
 
     /**
@@ -39,11 +37,10 @@ public class CosManager {
      *
      * @param key  唯一键
      * @param file 文件
-     * @return {@link PutObjectResult}
      */
-    public PutObjectResult putObject(String key, File file) {
+    public void putObject(String key, File file) {
         PutObjectRequest putObjectRequest = new PutObjectRequest(cosClientConfig.getBucket(), key,
                 file);
-        return cosClient.putObject(putObjectRequest);
+        cosClient.putObject(putObjectRequest);
     }
 }
