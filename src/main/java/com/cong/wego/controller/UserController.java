@@ -2,10 +2,14 @@ package com.cong.wego.controller;
 
 import cn.dev33.satoken.annotation.SaCheckRole;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.cong.oauth.model.AuthCallback;
+import com.cong.oauth.model.AuthResponse;
+import com.cong.oauth.request.AuthRequest;
 import com.cong.wego.common.BaseResponse;
 import com.cong.wego.common.DeleteRequest;
 import com.cong.wego.common.ErrorCode;
 import com.cong.wego.common.ResultUtils;
+import com.cong.wego.config.GitHubConfig;
 import com.cong.wego.config.WxOpenConfig;
 import com.cong.wego.constant.UserConstant;
 import com.cong.wego.exception.BusinessException;
@@ -58,6 +62,9 @@ public class UserController {
     @Resource
     private WxOpenConfig wxOpenConfig;
 
+    @Resource
+    private GitHubConfig gitHubConfig;
+
     // region 登录相关
 
     /**
@@ -99,6 +106,36 @@ public class UserController {
         if (StringUtils.isAnyBlank(userAccount, userPassword)) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
+        TokenLoginUserVo tokenLoginUserVo = userService.userLogin(userAccount, userPassword);
+        return ResultUtils.success(tokenLoginUserVo);
+    }
+
+    /**
+     * 用户通过 GitHub 登录
+     * @param callback 回调
+     * @return {@link BaseResponse}<{@link TokenLoginUserVo}>
+     */
+    @PostMapping("/login/github")
+    @ApiOperation(value = "用户GitHub登录")
+    public BaseResponse<TokenLoginUserVo> userLoginByGithub(AuthCallback callback) {
+        if (callback.getCode() == null) {
+            throw new BusinessException(ErrorCode.PARAMS_ERROR,"Github 登录失败，code 为空");
+        }
+        AuthRequest authRequest = gitHubConfig.getAuthRequest();
+        AuthResponse response = authRequest.login(callback);
+        // 获取用户信息
+        Object data = response.getData();
+        if (data == null) {
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR,"Github 登录失败，获取用户信息失败");
+        }
+        //判断用户是否存在
+        String userAccount = "";
+        String userPassword = "";
+
+        //1、用户不存在，则注册
+
+        //2、用户存在，则登录
+
         TokenLoginUserVo tokenLoginUserVo = userService.userLogin(userAccount, userPassword);
         return ResultUtils.success(tokenLoginUserVo);
     }

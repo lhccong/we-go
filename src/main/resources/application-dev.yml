@@ -50,6 +50,10 @@ cos:
     region: xxx
     bucket: xxx
 ##登录相关
+github:
+  client-id: xxx
+  client-secret: xxx
+  redirect-uri: xxx
 ############### Sa-Token 配置 (文档: https://sa-token.cc) ##############
 sa-token:
   # token 名称（同时也是 cookie 名称）
