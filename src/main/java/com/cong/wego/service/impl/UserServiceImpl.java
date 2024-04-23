@@ -359,6 +359,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         user.setUserPassword(encryptPassword);
         user.setUserAccount(userAccount);
         user.setUserAvatar(authUser.getAvatar());
+        user.setUserProfile(authUser.getRemark());
         user.setUserName(authUser.getNickname());
         user.setUserRole(UserRoleEnum.USER.getValue());
         this.save(user);
