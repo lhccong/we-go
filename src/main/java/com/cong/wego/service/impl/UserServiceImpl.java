@@ -9,9 +9,15 @@ import cn.dev33.satoken.stp.SaTokenInfo;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.text.CharSequenceUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.cong.oauth.model.AuthCallback;
+import com.cong.oauth.model.AuthResponse;
+import com.cong.oauth.model.AuthUser;
+import com.cong.oauth.request.AuthRequest;
 import com.cong.wego.common.ErrorCode;
+import com.cong.wego.config.GitHubConfig;
 import com.cong.wego.constant.CommonConstant;
 import com.cong.wego.constant.SystemConstants;
 import com.cong.wego.exception.BusinessException;
@@ -50,6 +56,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
 
     @Resource
     private UserRoomRelateService userRoomRelateService;
+
+    @Resource
+    private GitHubConfig gitHubConfig;
 
     @Override
     public long userRegister(String userAccount, String userPassword, String checkPassword) {
@@ -319,5 +328,39 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements Us
         queryWrapper.orderBy(SqlUtils.validSortField(sortField), sortOrder.equals(CommonConstant.SORT_ORDER_ASC),
                 sortField);
         return queryWrapper;
+    }
+
+    @Override
+    public TokenLoginUserVo userLoginByGithub(AuthCallback callback) {
+        AuthRequest authRequest = gitHubConfig.getAuthRequest();
+        AuthResponse response = authRequest.login(callback);
+        // 获取用户信息
+        AuthUser authUser = (AuthUser) response.getData();
+        if (authUser == null) {
+            throw new BusinessException(ErrorCode.SYSTEM_ERROR,"Github 登录失败，获取用户信息失败");
+        }
+        //判断用户是否存在
+        String userAccount = authUser.getUsername();
+
+        //1、用户不存在，则注册
+        User user = this.getOne(new LambdaQueryWrapper<User>().eq(User::getUserAccount, userAccount));
+        if (user == null) {
+            saveGithubUser(userAccount, authUser);
+        }
+        //2、用户存在，则登录
+        return this.userLogin(userAccount, authUser.getUuid()+authUser.getUsername());
+    }
+
+    private void saveGithubUser(String userAccount, AuthUser authUser) {
+        User user;
+        user = new User();
+        String defaultPassword = authUser.getUuid()+authUser.getUsername();
+        String encryptPassword = DigestUtils.md5DigestAsHex((SALT + defaultPassword).getBytes());
+        user.setUserPassword(encryptPassword);
+        user.setUserAccount(userAccount);
+        user.setUserAvatar(authUser.getAvatar());
+        user.setUserName(authUser.getNickname());
+        user.setUserRole(UserRoleEnum.USER.getValue());
+        this.save(user);
     }
 }

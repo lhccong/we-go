@@ -2,6 +2,7 @@ package com.cong.wego.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.cong.oauth.model.AuthCallback;
 import com.cong.wego.model.dto.user.UserQueryRequest;
 import com.cong.wego.model.entity.User;
 import com.cong.wego.model.vo.user.LoginUserVO;
@@ -122,4 +123,11 @@ public interface UserService extends IService<User> {
      */
     QueryWrapper<User> getQueryWrapper(UserQueryRequest userQueryRequest);
 
+    /**
+     * 用户通过 GitHub 登录
+     *
+     * @param callback 回调
+     * @return {@link TokenLoginUserVo}
+     */
+    TokenLoginUserVo userLoginByGithub(AuthCallback callback);
 }
