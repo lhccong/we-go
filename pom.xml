@@ -90,9 +90,9 @@
             <artifactId>commons-lang3</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.cong.oauth</groupId>
-            <artifactId>OneAuth</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <groupId>me.zhyd.oauth</groupId>
+            <artifactId>JustAuth</artifactId>
+            <version>1.16.6</version>
         </dependency>
         <!-- https://github.com/alibaba/easyexcel -->
         <dependency>

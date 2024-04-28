@@ -1,9 +1,9 @@
 package com.cong.wego.config;
 
-import com.cong.oauth.config.AuthConfig;
-import com.cong.oauth.config.AuthDefaultSource;
-import com.cong.oauth.request.AuthRequest;
-import com.cong.oauth.request.code.AuthGithubRequest;
+import me.zhyd.oauth.config.AuthConfig;
+import me.zhyd.oauth.config.AuthDefaultSource;
+import me.zhyd.oauth.request.AuthGithubRequest;
+import me.zhyd.oauth.request.AuthRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
@@ -28,6 +28,6 @@ public class GitHubConfig {
                 .clientId(clientId)
                 .clientSecret(clientSecret)
                 .redirectUri(redirectUri)
-                .build(), AuthDefaultSource.GITHUB);
+                .build());
     }
 }
