@@ -2,7 +2,6 @@ package com.cong.wego.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.cong.oauth.model.AuthCallback;
 import com.cong.wego.model.dto.user.UserQueryRequest;
 import com.cong.wego.model.entity.User;
 import com.cong.wego.model.vo.user.LoginUserVO;
@@ -11,6 +10,7 @@ import com.cong.wego.model.vo.user.UserVO;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import me.chanjar.weixin.common.bean.WxOAuth2UserInfo;
+import me.zhyd.oauth.model.AuthCallback;
 
 /**
  * 用户服务

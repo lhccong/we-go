@@ -1,8 +1,8 @@
 package com.cong.wego.controller;
 
 
-import com.cong.oauth.request.AuthRequest;
 import com.cong.wego.config.GitHubConfig;
+import me.zhyd.oauth.request.AuthRequest;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
