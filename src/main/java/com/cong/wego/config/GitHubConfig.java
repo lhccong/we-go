@@ -1,7 +1,6 @@
 package com.cong.wego.config;
 
 import me.zhyd.oauth.config.AuthConfig;
-import me.zhyd.oauth.config.AuthDefaultSource;
 import me.zhyd.oauth.request.AuthGithubRequest;
 import me.zhyd.oauth.request.AuthRequest;
 import org.springframework.beans.factory.annotation.Value;
