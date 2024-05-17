@@ -23,7 +23,7 @@ public class BeanCopyUtils {
 
     public static <V> V copyBean(Object source,Class<V> clazz) {
         // 创建目标对象
-        V result = null;
+        V result;
         try {
             result = clazz.newInstance();
             // 实现属性copy

@@ -25,6 +25,9 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 public class SseServer {
+    private SseServer() {
+
+    }
 
     /**
      * 当前连接总数
