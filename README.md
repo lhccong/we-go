@@ -39,6 +39,9 @@ spring.datasource.password=your_password
 
 5. 访问应用程序：在浏览器中输入 `http://localhost:8869` 访问微狗聊天网站。
 
+6. 项目前端地址：https://github.com/lhccong/we-go-frontend
+
+
 ### 贡献者
 
 - [聪](https://github.com/lhccong) - 主要开发者
